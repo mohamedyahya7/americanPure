@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "americanPure",
-    "slug": "americanPure",
+    "name": "filterCO",
+    "slug": "filterCO",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -12,16 +12,38 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "location",
+          "fetch",
+          "remte-notification"
+        ]
+      }
     },
     "android": {
+      "package": "com.filterCO.filterCO",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyA937cx9CHKdNeBqlNFQE4I30dnXSJZZF8"
+        }
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-secure-store"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "a272b594-45b5-44a7-86e3-1b1574ecbc15"
+      }
     }
   }
 }
