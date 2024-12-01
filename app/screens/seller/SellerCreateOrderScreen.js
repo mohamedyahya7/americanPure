@@ -46,7 +46,7 @@ const validationSchema = Yup.object().shape({
   installments_count: Yup.number().required("عدد القسط مطلوب"),
   payMethod: Yup.object().required("طريقة الدفع مطلوبة"),
   start_date: Yup.date().required("تاريخ البدء مطلوب"),
-
+  
   address: Yup.string().required("العنوان مطلوب"),
   zone: Yup.object().required("المنطقة مطلوبة"),
 });

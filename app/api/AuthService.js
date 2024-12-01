@@ -4,6 +4,8 @@ import { setToken } from './tokenService';
 export const login = async (credentials)=>{
     try{
     const {data} = await axios.post('login',credentials);
+    console.log('login data', data);
+    
     setToken(data.token);
     await SecureStore.setItemAsync('user',JSON.stringify(data.user));
     return data.user;

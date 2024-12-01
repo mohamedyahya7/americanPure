@@ -53,6 +53,7 @@ function LoginScreen() {
           error="Invalid phone and/or password."
           visible={loginFailed}
         />
+        <View style={{flexDirection:'row-reverse',gap:8}}>
         <FormField
           autoCapitalize="none"
           autoCorrect={false}
@@ -74,6 +75,7 @@ function LoginScreen() {
           textContentType="password"
           row={true}
         />
+        </View>
         <SubmitButton title="تسجيل الدخول" />
       </Form>
     </Screen>
