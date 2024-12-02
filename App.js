@@ -40,8 +40,8 @@ export default function App() {
         {user.role === '0' && <ManagerNavigator/>}
         {user.role === '2' && <SellerNavigator/>}
         {user.role === '3' && <TechnicalNavigator setUser={setUser}/>}
-        {user.role === '4' && <CollecterScreen user={user} setUser={setUser}/>}
         {user.role === '4' && <CustomerServesScreen user={user} setUser={setUser}/>}
+        {user.role === '5' && <CollecterScreen user={user} setUser={setUser}/>}
       </>) }
         
      

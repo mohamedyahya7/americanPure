@@ -39,8 +39,8 @@ async function getTeamsData(setTeams) {
 const roles = [
   { label: "مسوق", value: 2, icon: "shopping-outline", backgroundColor: '#0af7d5' },
   { label: "فني", value: 3, icon: "wrench-outline", backgroundColor: '#555' },
-  { label: "محصل", value: 4, icon: "cash", backgroundColor: 'green' },
-  { label: "خدمة عملاء", value: 5, icon: "phone-outline", backgroundColor: '#fc5c65' },
+  { label: "محصل", value: 5, icon: "cash", backgroundColor: 'green' },
+  { label: "خدمة عملاء", value: 4, icon: "phone-outline", backgroundColor: '#fc5c65' },
 ];
 
 function CreateEmployeeScreen() {
