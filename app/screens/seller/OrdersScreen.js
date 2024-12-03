@@ -23,13 +23,13 @@ function OrdersScreen({ navigation }) {
       const serverData = await getOrders();
       if (serverData) {
         setOrders(serverData);
+        console.log("serverData",JSON.stringify(serverData, null, 2));
         await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(serverData));
       } else {
         // إذا فشل التحميل من السيرفر، نحاول التحميل من التخزين المحلي
         await loadFromStorage();
       }
     } catch (error) {
-      // في حالة حدوث خطأ، نحاول التحميل من التخزين المحلي
       await loadFromStorage();
     } finally {
       setRefreshing(false);
@@ -64,7 +64,7 @@ function OrdersScreen({ navigation }) {
 const styles = StyleSheet.create({
   screen: {
     padding: 10,
-    backgroundColor: colors.light,
+    backgroundColor: colors.white,
   },
 });
 

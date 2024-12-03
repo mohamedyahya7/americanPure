@@ -8,38 +8,38 @@ import {
   Image,
 } from "react-native";
 import * as Yup from "yup";
-import { createOrder } from "../../api/sellerService";
+
+import { edit } from "../api/customerServiceService";
 
 import {
   Form,
   FormField,
   FormPicker as Picker,
   SubmitButton,
-} from "../../components/forms";
-import CategoryPickerItem from "../../components/CategoryPickerItem";
-import Screen from "../../components/Screen";
-import useLocation from "../../hooks/useLocation";
-import UploadScreen from "../UploadScreen";
-import DatePicker from "../../components/DatePicker.js";
-import defaultStyles from "../../config/styles";
-import ActivityIndicator from "../../components/ActivityIndicator.js";
+} from "../components/forms";
+import CategoryPickerItem from "../components/CategoryPickerItem";
+import Screen from "../components/Screen";
+import UploadScreen from "./UploadScreen";
+import DatePicker from "../components/DatePicker.js";
+import defaultStyles from "../config/styles";
+import ActivityIndicator from "../components/ActivityIndicator.js";
 
 const validationSchema = Yup.object().shape({
   first_name: Yup.string().required("الاسم الاول مطلوب"),
   last_name: Yup.string().required("باقي الاسم مطلوب"),
   phone: Yup.string()
     .required("رقم الهاتف مطلوب")
-    // .min(11, "اقل عدد من الارقام 11")
+   .min(11, "اقل عدد من الارقام 11")
     .max(11)
     .matches(/^\d+$/),
   phone2: Yup.string()
     .required("رقم الهاتف مطلوب")
-    //.min(11, "اقل عدد من الارقام 11")
+    .min(11, "اقل عدد من الارقام 11")
     .max(11)
     .matches(/^\d+$/),
   nationalId: Yup.string()
     .required("الرقم القومي مطلوب")
-    //.min(14, "اقل عدد من الارقام 14")
+    .min(14, "اقل عدد من الارقام 14")
     .max(14)
     .matches(/^\d+$/),
 
@@ -71,44 +71,41 @@ const zones = [
   { label: "المنطقة الثانية", value: 2 },
 ];
 
-function SellerCreateOrderScreen() {
+function EditOrderScreen({order,setModal,refresh}) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progress, setProgress] = useState(0);
+
   // const [loading, setLoading] = useState(false);
 
-  const [amount, setAmount] = useState(250);
-  const [count, setCount] = useState(12);
+  const [amount, setAmount] = useState(order.installment_amount);
+  const [count, setCount] = useState(order.installments_count);
   let price = amount * count;
 
-  let key = "ListItems";
-  useEffect(() => {
-    useLocation();
-  }, []);
+ 
 
-  async function handleSubmit(listing, { resetForm }) {
+    async function handleSubmit(formOrder, { resetForm }) {
 
-    console.log("listing", listing);
-    const location = await useLocation();
-    let nlisting = {
-      ...listing,
-      payment_method: listing.payMethod.value,
-      zone_id: listing.zone.value,
-      latitude: location.latitude,
-      longitude: location.longitude,
+    
+    let newFormOrder = {
+      ...formOrder,
+      payment_method: formOrder.payMethod.value,
+      zone_id: formOrder.zone.value,
+      id: order.id,
     };
-    console.log("nlisting", nlisting);
+    console.log("newFormOrder", newFormOrder);
     setProgress(0);
     setUploadVisible(true);
 
     try {
-      const response = await createOrder(nlisting, (progress) =>
+      const {data} = await edit(newFormOrder, (progress) =>
         setProgress(progress)
       );
-      console.log("response", JSON.stringify(response, null, 2));
-      if (response.status == 200) resetForm();
+        resetForm();
+        setModal(false);
+        refresh();
     } catch (error) {
-      console.log("error from create order", error.message);
-      alert("حدث خطأ أثناء حفظ القائمة");
+        console.log("error from edit order", error.message);
+      alert("حدث خطأ أثناء تعديل الطلب");
     }
     setUploadVisible(false);
     // (async()=> {
@@ -116,12 +113,12 @@ function SellerCreateOrderScreen() {
     //   const value = await AsyncStorage.getItem(key);
     //   const items = JSON.parse(value)
     //   if (!items) {
-    //     await AsyncStorage.setItem(key , JSON.stringify([{...nlisting}]));
+    //     await AsyncStorage.setItem(key , JSON.stringify([{...newFormOrder}]));
     //   }else{
-    //     const updatedItems = [{...nlisting},...items];
+    //     const updatedItems = [{...newFormOrder},...items];
     //     await AsyncStorage.setItem(key, JSON.stringify(updatedItems));
     //    console.log('u;',updatedItems)
-    //   }})(listing);
+    //   }})(newFormOrder);
     // resetForm();
   }
 
@@ -134,35 +131,23 @@ function SellerCreateOrderScreen() {
           visible={uploadVisible}
         />
         {/* <ActivityIndicator visible={loading} /> */}
-        <Image
-          source={require("../../assets/icon.png")}
-          style={{
-            width: 150,
-            height: 100,
-            alignSelf: "center",
-            marginTop: -50,
-            marginBottom: 20,
-            borderRadius: 25,
-          }}
-        />
+        
         <KeyboardAvoidingView behavior={"height"} keyboardVerticalOffset={1}>
           {/* {Platform.OS==='ios'?'padding':'height'} */}
           <ScrollView>
             <Form
               initialValues={{
-                first_name: "",
-                last_name: "",
-                phone: "",
-                phone2: "",
-                nationalId: "",
-                payMethod: null,
-                zone: null,
-                installment_amount: amount.toString(),
+                first_name: order.first_name,
+                last_name: order.last_name,
+                phone: order.phone,
+                phone2: order.phone2,
+                nationalId: order.nationalId,
+                payMethod: payMethod.find(p=>p.value==order.payment_method),
+                zone: zones.find(z=>z.value==order.zone_id),
+                installment_amount:amount.toString(),
                 installments_count: count.toString(),
-                address: "",
-                start_date: new Date(
-                  new Date().setMonth(new Date().getMonth() + 1)
-                ),
+                address: order.address,
+                start_date: new Date(order.start_date),
               }}
               onSubmit={handleSubmit}
               validationSchema={validationSchema}
@@ -284,7 +269,7 @@ function SellerCreateOrderScreen() {
                   </Text>
                 </View>
               </View>
-              <SubmitButton title="اضافة الطلب" />
+              <SubmitButton title="تعديل الطلب" />
             </Form>
           </ScrollView>
         </KeyboardAvoidingView>
@@ -307,4 +292,4 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
 });
-export default SellerCreateOrderScreen;
+export default EditOrderScreen;

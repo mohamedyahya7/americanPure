@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "white",
     height: "100%",
-    opacity: 1,
+    opacity: 0.7,
     width: "100%",
     zIndex: 1,
   },

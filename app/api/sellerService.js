@@ -11,7 +11,7 @@ export const getOrders = async ()=>{
 }
 
 export const createOrder = async (nlisting,onUploadProgress)=>{
-    let data = new FormData();
+    //let data = new FormData();
             
     // data.append('name',nlisting.name)
     // data.append('phone',nlisting.phone)
@@ -31,7 +31,7 @@ export const createOrder = async (nlisting,onUploadProgress)=>{
     // //    { name: `image${index+1}`, type: "image/jpeg",uri: image,}));
     //     console.log('data',data);
     try{
-    const response = await axios.post('/seller/order',data,{
+    const response = await axios.post('/seller/order',nlisting,{
         onUploadProgress: (progress) =>
           onUploadProgress(progress.loaded / progress.total),
       });

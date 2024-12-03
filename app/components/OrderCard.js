@@ -16,24 +16,23 @@ import colors from "../config/colors";
 import { storage } from "../config/settings";
 
 function OrderCard({ item, onPress }) {
+
   let {
     id,
-    name,
+    first_name,
+    last_name,
     phone,
     phone2,
     address,
     latitude,
     longitude,
-    payment_method,
-    national_id,
-    image1,
-    image2,
-    image3,
-    team,
-    device,
+    nationalId,
+    installments_count,
     status,
     created_at:date,
   } = item;
+  let name = `${first_name} ${last_name}`;
+  item.name = name;
   let location = `${latitude},${longitude}`;
   const openLocation = async (location) => {
     try {
@@ -75,13 +74,13 @@ function OrderCard({ item, onPress }) {
         ]}
       >
         {/* <View style={{width:"30%"}}> */}
-        {image1 && (
+        {/* {image1 && (
           <Image
             style={styles.image}
             src={storage(image1)}
             // source={{uri:imageUrl}  }
           />
-        )}
+        )} */}
         {/* <Image
           style={styles.image}
           tint="light"
@@ -91,14 +90,8 @@ function OrderCard({ item, onPress }) {
         {/* </View> */}
 
         <View style={styles.detailsContainer}>
-          <Text style={styles.title}>{name}</Text>
-          {/* <Text style={styles.title} >
-             {payment_method==1?'كاش':"قسط" }
-          </Text> */}
+          <View style={styles.row}>
 
-          {/* <Text style={styles.title} >
-            {national_id}
-          </Text> */}
           <Text
             style={{
               backgroundColor: colors.primary,
@@ -112,6 +105,18 @@ function OrderCard({ item, onPress }) {
             {Math.floor((new Date() - new Date(date)) / 1000 / 60 / 60)} ساعه و{" "}
             {Math.floor(((new Date() - new Date(date)) / 1000 / 60) % 60)} دقيقه
           </Text>
+          <Text style={[{color:colors.white,backgroundColor:installments_count>1?colors.primary:colors.secondary ,padding:6,borderRadius:15}]}>{installments_count>1?"قسط":"كاش"}</Text>
+          </View>
+          
+          <View style={styles.row}>
+
+<Text style={styles.title}>{name}</Text>
+
+          <Text style={styles.title} >
+            {nationalId}
+          </Text>
+          </View>
+          
 
           <View style={styles.row}>
             <Pressable onPress={() => copyToClipboard(location)}>
@@ -150,8 +155,7 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     padding: 20,
-
-    width: "70%",
+    width: "100%",
     gap: 10,
   },
   row: {
